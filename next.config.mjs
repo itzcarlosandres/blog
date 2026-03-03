@@ -17,6 +17,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   transpilePackages: ['lucide-react'],
+  experimental: {
+    serverComponentsExternalPackages: ['isomorphic-dompurify'],
+  },
 }
 
 export default nextConfig;
