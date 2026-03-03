@@ -8,13 +8,23 @@ let cachedDb: Db | null = null
 export async function connectToDatabase(): Promise<Db> {
   if (cachedDb) return cachedDb
 
-  // Solo devolvemos el Mock si estamos estrictamente en fase de build
-  // y NO tenemos una URL de base de datos válida.
-  if (process.env.NEXT_PHASE === 'phase-production-build' && !process.env.DATABASE_URL) {
+  // BLINDAJE PARA EL BUILD: Si estamos construyendo la app, NO conectamos a la DB real.
+  // Esto evita el exit code 1 en Easypanel.
+  if (
+    process.env.IS_BUILD_PHASE === 'true' ||
+    process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL // Caso de seguridad extra
+  ) {
+    console.log("Modo Build detectado: Usando Mock de base de datos");
     return {
       isMock: true,
       collection: () => ({
-        find: () => ({ toArray: () => Promise.resolve([]), sort: () => ({ toArray: () => Promise.resolve([]) }), limit: () => ({ toArray: () => Promise.resolve([]) }) }),
+        find: () => ({
+          toArray: () => Promise.resolve([]), sort: () => ({
+            toArray: () => Promise.resolve([]),
+            limit: () => ({ toArray: () => Promise.resolve([]) })
+          }), limit: () => ({ toArray: () => Promise.resolve([]) })
+        }),
         findOne: () => Promise.resolve(null),
         updateOne: () => Promise.resolve({}),
         insertOne: () => Promise.resolve({ insertedId: 'temp' }),
@@ -23,13 +33,15 @@ export async function connectToDatabase(): Promise<Db> {
   }
 
   if (!client) {
-    client = new MongoClient(uri)
+    client = new MongoClient(uri, {
+      connectTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 5000,
+    })
   }
 
   try {
     await client.connect()
 
-    // Extraer nombre de DB de la cadena o usar 'blog'
     let dbName = 'blog'
     try {
       const url = new URL(uri)
