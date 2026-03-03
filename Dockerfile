@@ -11,10 +11,22 @@ RUN npm ci
 # 2. Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+
+# Definir ARGs para capturar variables de Easypanel durante el BUILD
+ARG DATABASE_URL
+ARG NEXTAUTH_SECRET
+ARG NEXTAUTH_URL
+ARG UPLOAD_DIR
+
+# Convertir ARGs en variables de entorno para que Next.js las vea en el build
+ENV DATABASE_URL=$DATABASE_URL
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
+ENV UPLOAD_DIR=$UPLOAD_DIR
+ENV NEXT_TELEMETRY_DISABLED 1
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Set build time envs if needed (DATABASE_URL must be available at build time for some next features)
-ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
 # 3. Production image, copy all the files and run next
