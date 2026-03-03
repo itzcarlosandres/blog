@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import * as LucideIcons from "lucide-react"
 import { Search, Clock, MessageCircle, ChevronRight, Menu, Share2, Facebook, Twitter, Linkedin, TrendingUp, Zap } from "lucide-react"
-import DOMPurify from "isomorphic-dompurify"
 import { ReadingProgress } from "@/components/reading-progress"
 import { SocialShare } from "@/components/social-share"
 import { Newsletter } from "@/components/newsletter"
@@ -218,7 +217,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div
               className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-headings:italic prose-headings:uppercase prose-headings:tracking-tighter prose-p:leading-relaxed prose-p:font-medium prose-p:text-muted-foreground prose-strong:text-foreground prose-blockquote:border-[#00a2a2] prose-blockquote:bg-muted/30 prose-blockquote:rounded-sm prose-img:rounded-sm shadow-inner-sm"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(post.content),
+                __html: post.content,
               }}
             />
 
