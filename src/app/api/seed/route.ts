@@ -6,14 +6,14 @@ export async function GET() {
     try {
         const db = await connectToDatabase()
 
-        // 1. Crear usuario Admin
-        const hashedPassword = await bcrypt.hash("admin123", 10)
+        // 1. Crear usuario Admin (Cambiado a tus datos preferidos)
+        const hashedPassword = await bcrypt.hash("password123", 10)
         await db.collection('users').updateOne(
-            { email: "admin@example.com" },
+            { email: "admin@ejemplo.com" },
             {
                 $set: {
                     name: "Administrador",
-                    email: "admin@example.com",
+                    email: "admin@ejemplo.com",
                     hashedPassword,
                     role: "ADMIN",
                     createdAt: new Date(),
