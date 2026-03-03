@@ -1,4 +1,4 @@
-# Dockerfile para Easypanel (Blindado total)
+# Dockerfile para Easypanel (Revisión Final)
 FROM node:18-alpine AS base
 
 # 1. Instalar dependencias
@@ -28,27 +28,25 @@ ENV IS_BUILD_PHASE=true
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Aseguramos que la carpeta public existe para que no falle el COPY posterior
 RUN mkdir -p public
-
 RUN npm run build
 
-# 3. Imagen final de ejecución
+# 3. Imagen final de ejecución (AQUÍ ESTABA EL ERROR)
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# IMPORTANTE: Easypanel inyectará estas variables en tiempo de ejecución
+# Pero las declaramos aquí para asegurar que Next.js las reconozca.
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copiamos la carpeta public solo si tiene contenido, para evitar errores de Docker
 COPY --from=builder /app/public ./public
 RUN mkdir -p .next && chown nextjs:nodejs .next
 
-# Usar el modo standalone de Next.js
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 

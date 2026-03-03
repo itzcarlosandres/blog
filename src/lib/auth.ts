@@ -20,13 +20,14 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           const validated = credentialsSchema.parse(credentials)
-          
+
           const db = await connectToDatabase()
           const user = await db.collection('users').findOne({
             email: validated.email
           })
 
           if (!user || !user.hashedPassword) {
+            console.log("Login Error: Usuario no encontrado o sin contraseña");
             return null
           }
 
@@ -36,6 +37,7 @@ export const authOptions: NextAuthOptions = {
           )
 
           if (!isValid) {
+            console.log("Login Error: Contraseña incorrecta para", validated.email);
             return null
           }
 
@@ -46,7 +48,8 @@ export const authOptions: NextAuthOptions = {
             image: user.image,
             role: user.role,
           }
-        } catch {
+        } catch (error) {
+          console.error("Login System Error:", error);
           return null
         }
       },
