@@ -59,20 +59,24 @@ export interface Comment {
 
 export async function getUsers() {
   const db = await connectToDatabase()
+  if (!db) return []
   return db.collection<User>('users').find({}).toArray()
 }
 
 export async function getPosts() {
   const db = await connectToDatabase()
+  if (!db) return []
   return db.collection<Post>('posts').find({}).toArray()
 }
 
 export async function getCategories() {
   const db = await connectToDatabase()
+  if (!db) return []
   return db.collection<Category>('categories').find({}).toArray()
 }
 
 export async function getComments() {
   const db = await connectToDatabase()
+  if (!db) return []
   return db.collection<Comment>('comments').find({}).toArray()
 }
