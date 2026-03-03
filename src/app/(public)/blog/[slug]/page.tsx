@@ -1,5 +1,6 @@
 import { connectToDatabase } from "@/lib/mongodb"
 import { getSiteSettings } from "@/lib/settings"
+export const dynamic = 'force-dynamic'
 import { ObjectId } from "mongodb"
 import Link from "next/link"
 import Image from "next/image"

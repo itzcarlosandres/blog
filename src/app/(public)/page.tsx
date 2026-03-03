@@ -1,5 +1,6 @@
 import { getPosts, getCategories } from "@/lib/db"
 import { getSiteSettings } from "@/lib/settings"
+export const dynamic = 'force-dynamic'
 import Link from "next/link"
 import Image from "next/image"
 import { formatDate, readingTime } from "@/lib/utils"
@@ -72,7 +73,7 @@ export default async function HomePage() {
 
             <div className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-widest text-white/70">
               {categories.slice(0, 4).map(cat => (
-                <Link key={cat.id} href={`/blog?categoria=${cat.slug}`} className="hover:text-[#00a2a2] transition-colors">{cat.name}</Link>
+                <Link key={cat.id} href={`/ blog ? categoria = ${cat.slug} `} className="hover:text-[#00a2a2] transition-colors">{cat.name}</Link>
               ))}
             </div>
 
@@ -92,7 +93,7 @@ export default async function HomePage() {
         <div className="bg-[#00a2a2] hidden md:block overflow-x-auto no-scrollbar border-b border-white/10">
           <div className="container mx-auto h-11 flex items-center gap-8 px-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
             {categories.map(cat => (
-              <Link key={cat.id} href={`/blog?categoria=${cat.slug}`} className="hover:text-black transition-colors">
+              <Link key={cat.id} href={`/ blog ? categoria = ${cat.slug} `} className="hover:text-black transition-colors">
                 {cat.name}
               </Link>
             ))}
@@ -120,7 +121,7 @@ export default async function HomePage() {
               {posts.slice(0, 6).map((p, idx) => (
                 <Link
                   key={p.id}
-                  href={`/blog/${p.slug}`}
+                  href={`/ blog / ${p.slug} `}
                   className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-all duration-300 group/item"
                 >
                   <span className="text-primary/30 font-black italic">#{idx + 1}</span>
@@ -131,8 +132,8 @@ export default async function HomePage() {
               {/* Duplicate for seamless feel if empty spaces exist */}
               {posts.slice(0, 3).map((p, idx) => (
                 <Link
-                  key={`dup-${p.id}`}
-                  href={`/blog/${p.slug}`}
+                  key={`dup - ${p.id} `}
+                  href={`/ blog / ${p.slug} `}
                   className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-all duration-300 group/item md:hidden lg:flex"
                 >
                   <span className="text-primary/30 font-black italic">#{idx + 7}</span>
@@ -148,7 +149,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-4 lg:grid-rows-2 gap-4 h-auto lg:h-[600px] mb-12">
             {/* Main Featured Item */}
             <article className="lg:col-span-2 lg:row-span-2 relative group overflow-hidden bg-black rounded-sm border border-border">
-              <Link href={`/blog/${featuredPost.slug}`} className="absolute inset-0 z-10" />
+              <Link href={`/ blog / ${featuredPost.slug} `} className="absolute inset-0 z-10" />
               <div className="relative h-full w-full opacity-70 group-hover:opacity-100 transition-opacity transform group-hover:scale-105 duration-700">
                 {featuredPost.coverImage && (
                   <Image src={featuredPost.coverImage} alt={featuredPost.title} fill className="object-cover" priority />
@@ -171,7 +172,7 @@ export default async function HomePage() {
 
             {/* Second Item */}
             <article className="lg:col-span-2 relative group overflow-hidden bg-black rounded-sm border border-border">
-              <Link href={`/blog/${secondPost.slug}`} className="absolute inset-0 z-10" />
+              <Link href={`/ blog / ${secondPost.slug} `} className="absolute inset-0 z-10" />
               <div className="relative h-full w-full opacity-70 group-hover:opacity-100 transition-opacity transform group-hover:scale-105 duration-700">
                 {secondPost.coverImage && (
                   <Image src={secondPost.coverImage} alt={secondPost.title} fill className="object-cover" />
@@ -190,7 +191,7 @@ export default async function HomePage() {
 
             {/* Third & Fourth Items */}
             <article className="relative group overflow-hidden bg-black rounded-sm border border-border">
-              <Link href={`/blog/${thirdPost.slug}`} className="absolute inset-0 z-10" />
+              <Link href={`/ blog / ${thirdPost.slug} `} className="absolute inset-0 z-10" />
               <div className="relative h-full w-full opacity-60 group-hover:opacity-100 transition-opacity transform group-hover:scale-105 duration-700">
                 {thirdPost.coverImage && (
                   <Image src={thirdPost.coverImage} alt={thirdPost.title} fill className="object-cover" />
@@ -208,7 +209,7 @@ export default async function HomePage() {
             </article>
 
             <article className="relative group overflow-hidden bg-black rounded-sm border border-border">
-              <Link href={`/blog/${fourthPost.slug}`} className="absolute inset-0 z-10" />
+              <Link href={`/ blog / ${fourthPost.slug} `} className="absolute inset-0 z-10" />
               <div className="relative h-full w-full opacity-60 group-hover:opacity-100 transition-opacity transform group-hover:scale-105 duration-700">
                 {fourthPost.coverImage && (
                   <Image src={fourthPost.coverImage} alt={fourthPost.title} fill className="object-cover" />
@@ -238,7 +239,7 @@ export default async function HomePage() {
 
             {remainingPosts.map((post) => (
               <article key={post.id} className="flex flex-col md:flex-row gap-6 border-b border-border pb-10 group">
-                <Link href={`/blog/${post.slug}`} className="md:w-1/3 aspect-video relative overflow-hidden rounded-sm bg-muted">
+                <Link href={`/ blog / ${post.slug} `} className="md:w-1/3 aspect-video relative overflow-hidden rounded-sm bg-muted">
                   {post.coverImage ? (
                     <Image src={post.coverImage} alt={post.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                   ) : (
@@ -254,7 +255,7 @@ export default async function HomePage() {
                       <Clock className="h-3 w-3" /> {formatDate(post.publishedAt!)}
                     </div>
                   </div>
-                  <Link href={`/blog/${post.slug}`}>
+                  <Link href={`/ blog / ${post.slug} `}>
                     <h3 className="text-xl lg:text-2xl font-black leading-tight tracking-tight group-hover:text-[#00a2a2] transition-colors italic uppercase">
                       {post.title}
                     </h3>
@@ -285,7 +286,7 @@ export default async function HomePage() {
                 {posts.slice(0, 5).map((p, i) => (
                   <div key={p.id} className="flex gap-4 group">
                     <span className="text-3xl font-black italic text-muted-foreground/20 group-hover:text-[#00a2a2]/30 transition-colors">0{i + 1}</span>
-                    <Link href={`/blog/${p.slug}`} className="text-sm font-black leading-snug hover:text-[#00a2a2] transition-colors tracking-tight uppercase italic">
+                    <Link href={`/ blog / ${p.slug} `} className="text-sm font-black leading-snug hover:text-[#00a2a2] transition-colors tracking-tight uppercase italic">
                       {p.title}
                     </Link>
                   </div>
@@ -306,7 +307,7 @@ export default async function HomePage() {
               <h3 className="text-sm font-black uppercase tracking-widest border-l-4 border-[#00a2a2] pl-3 mb-6">ESPECIALES</h3>
               <div className="grid grid-cols-2 gap-4">
                 {categories.slice(0, 4).map(cat => (
-                  <Link key={cat.id} href={`/blog?categoria=${cat.slug}`} className="flex flex-col items-center justify-center p-6 bg-card border border-border hover:bg-[#00a2a2] hover:text-white transition-all group">
+                  <Link key={cat.id} href={`/ blog ? categoria = ${cat.slug} `} className="flex flex-col items-center justify-center p-6 bg-card border border-border hover:bg-[#00a2a2] hover:text-white transition-all group">
                     <span className="text-xs font-black uppercase tracking-widest text-center">{cat.name}</span>
                   </Link>
                 ))}

@@ -1,5 +1,6 @@
 import { getPosts, getCategories } from "@/lib/db"
 import { getSiteSettings } from "@/lib/settings"
+export const dynamic = 'force-dynamic'
 import Link from "next/link"
 import Image from "next/image"
 import { formatDate, readingTime } from "@/lib/utils"
@@ -112,7 +113,7 @@ export default async function BlogPage({
         <div className="bg-[#00a2a2] hidden md:block overflow-x-auto no-scrollbar border-b border-white/10">
           <div className="container mx-auto h-11 flex items-center gap-8 px-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
             {categories.slice(0, 8).map(cat => (
-              <Link key={cat.id} href={`/blog?categoria=${cat.slug}`} className={`hover:text-black transition-colors ${activeCategory?.id === cat.id ? 'text-black' : ''}`}>
+              <Link key={cat.id} href={`/ blog ? categoria = ${cat.slug} `} className={`hover: text - black transition - colors ${activeCategory?.id === cat.id ? 'text-black' : ''} `}>
                 {cat.name}
               </Link>
             ))}
@@ -131,7 +132,7 @@ export default async function BlogPage({
               <ChevronRight className="h-3 w-3" /> {activeCategory ? 'SECCIÓN' : 'ARCHIVO'}
             </div>
             <h1 className="text-4xl lg:text-6xl font-black italic tracking-tighter leading-none uppercase">
-              {activeCategory ? activeCategory.name : searchParams.buscar ? `RESULTADOS: ${searchParams.buscar}` : "ÚLTIMAS PUBLICACIONES"}
+              {activeCategory ? activeCategory.name : searchParams.buscar ? `RESULTADOS: ${searchParams.buscar} ` : "ÚLTIMAS PUBLICACIONES"}
             </h1>
           </div>
           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest italic">
@@ -150,7 +151,7 @@ export default async function BlogPage({
             ) : (
               posts.map((post) => (
                 <article key={post.id} className="flex flex-col md:flex-row gap-8 pb-10 border-b border-border group">
-                  <Link href={`/blog/${post.slug}`} className="md:w-2/5 aspect-video relative overflow-hidden rounded-sm bg-muted shadow-lg">
+                  <Link href={`/ blog / ${post.slug} `} className="md:w-2/5 aspect-video relative overflow-hidden rounded-sm bg-muted shadow-lg">
                     {post.coverImage ? (
                       <Image src={post.coverImage} alt={post.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : (
@@ -161,7 +162,7 @@ export default async function BlogPage({
                     </Badge>
                   </Link>
                   <div className="flex-1 space-y-4">
-                    <Link href={`/blog/${post.slug}`}>
+                    <Link href={`/ blog / ${post.slug} `}>
                       <h2 className="text-2xl lg:text-3xl font-black italic tracking-tighter leading-tight uppercase group-hover:text-[#00a2a2] transition-colors">
                         {post.title}
                       </h2>
@@ -187,15 +188,16 @@ export default async function BlogPage({
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                   <Link
                     key={p}
-                    href={`/blog?${new URLSearchParams({
+                    href={`/ blog ? ${new URLSearchParams({
                       ...(searchParams.categoria && { categoria: searchParams.categoria }),
                       ...(searchParams.buscar && { buscar: searchParams.buscar }),
                       pagina: p.toString()
-                    }).toString()}`}
+                    }).toString()
+                      } `}
                   >
                     <Button
                       variant={p === currentPage ? "default" : "outline"}
-                      className={`h-12 w-12 rounded-none font-black ${p === currentPage ? 'bg-[#00a2a2]' : 'border-border'}`}
+                      className={`h - 12 w - 12 rounded - none font - black ${p === currentPage ? 'bg-[#00a2a2]' : 'border-border'} `}
                     >
                       {p}
                     </Button>
@@ -215,12 +217,12 @@ export default async function BlogPage({
             <section className="bg-muted/30 p-8 rounded-sm border border-border">
               <h3 className="text-sm font-black uppercase tracking-widest border-l-4 border-[#00a2a2] pl-3 mb-8">FILTRAR POR SECCIÓN</h3>
               <div className="flex flex-col gap-2">
-                <Link href="/blog" className={`flex items-center justify-between p-3 text-[10px] font-black uppercase tracking-widest transition-all ${!searchParams.categoria ? 'bg-[#00a2a2] text-white' : 'hover:bg-muted'}`}>
+                <Link href="/blog" className={`flex items - center justify - between p - 3 text - [10px] font - black uppercase tracking - widest transition - all ${!searchParams.categoria ? 'bg-[#00a2a2] text-white' : 'hover:bg-muted'} `}>
                   <span>Todo el Archivo</span>
                   <span>{allPostsCount}</span>
                 </Link>
                 {categories.map(cat => (
-                  <Link key={cat.id} href={`/blog?categoria=${cat.slug}`} className={`flex items-center justify-between p-3 text-[10px] font-black uppercase tracking-widest transition-all ${searchParams.categoria === cat.slug ? 'bg-[#00a2a2] text-white' : 'hover:bg-muted'}`}>
+                  <Link key={cat.id} href={`/ blog ? categoria = ${cat.slug} `} className={`flex items - center justify - between p - 3 text - [10px] font - black uppercase tracking - widest transition - all ${searchParams.categoria === cat.slug ? 'bg-[#00a2a2] text-white' : 'hover:bg-muted'} `}>
                     <span>{cat.name}</span>
                     <span>{cat.count}</span>
                   </Link>

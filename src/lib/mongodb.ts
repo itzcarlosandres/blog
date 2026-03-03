@@ -1,21 +1,18 @@
 import { MongoClient, Db } from 'mongodb'
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is not defined')
-}
-
-const rawUri = process.env.DATABASE_URL
+const rawUri = process.env.DATABASE_URL || 'mongodb://localhost:27017/blog'
 const uri = rawUri.includes('prisma+postgres')
-  ? 'mongodb://localhost:27017/blog' // Fallback para dev local si detecta Prisma Postgres
+  ? 'mongodb://localhost:27017/blog'
   : rawUri
 
-const client = new MongoClient(uri)
-
-let cachedDb: Db
+let client: MongoClient | null = null
+let cachedDb: Db | null = null
 
 export async function connectToDatabase() {
-  if (cachedDb) {
-    return cachedDb
+  if (cachedDb) return cachedDb
+
+  if (!client) {
+    client = new MongoClient(uri)
   }
 
   await client.connect()
