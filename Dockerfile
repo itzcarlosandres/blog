@@ -6,7 +6,8 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci
+# Usamos install en lugar de ci para ser más tolerantes a cambios manuales en el package.json
+RUN npm install
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
@@ -27,7 +28,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+# Mostramos los logs del build para diagnosticar mejor si falla
+RUN npm run build || { echo 'Build failed, checking logs...'; exit 1; }
 
 # 3. Production image, copy all the files and run next
 FROM base AS runner

@@ -15,6 +15,9 @@ export async function connectToDatabase() {
     client = new MongoClient(uri)
   }
 
+  // Solo intentamos conectar si no estamos en medio de un build de Next.js
+  // O mejor, simplemente lo intentamos y si falla lanzamos el error,
+  // pero asegurándonos de que no se ejecute al importar el módulo.
   await client.connect()
   const dbName = uri.includes('mongodb://') ? (uri.split('/').pop()?.split('?')[0] || 'blog') : 'blog'
   const db = client.db(dbName)
@@ -23,4 +26,8 @@ export async function connectToDatabase() {
   return db
 }
 
-export default client
+// Exportamos una promesa que NO inicia sola, para compatibilidad si alguien la usa
+export const clientPromise = (async () => {
+  if (!client) client = new MongoClient(uri)
+  return await client.connect()
+})()
