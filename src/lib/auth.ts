@@ -26,12 +26,22 @@ export const authOptions: NextAuthOptions = {
           const validated = credentialsSchema.parse(credentials)
 
           const db = await connectToDatabase()
+          if (!db || (db as any).isMock) {
+            console.error("CRÍTICO: El sistema está usando una base de datos MOCK. Revisa DATABASE_URL.");
+            return null
+          }
+
           const user = await db.collection('users').findOne({
-            email: validated.email
+            email: validated.email.toLowerCase().trim()
           })
 
-          if (!user || !user.hashedPassword) {
-            console.log("Login Error: Usuario no encontrado o sin contraseña");
+          if (!user) {
+            console.log("LOGIN FALLIDO: No existe el usuario ->", validated.email);
+            return null
+          }
+
+          if (!user.hashedPassword) {
+            console.log("LOGIN FALLIDO: El usuario no tiene contraseña definida");
             return null
           }
 
@@ -41,10 +51,11 @@ export const authOptions: NextAuthOptions = {
           )
 
           if (!isValid) {
-            console.log("Login Error: Contraseña incorrecta para", validated.email);
+            console.log("LOGIN FALLIDO: Contraseña incorrecta para", validated.email);
             return null
           }
 
+          console.log("LOGIN EXITOSO: Bienvenido", user.email);
           return {
             id: user._id.toString(),
             email: user.email,
@@ -52,8 +63,8 @@ export const authOptions: NextAuthOptions = {
             image: user.image,
             role: user.role,
           }
-        } catch (error) {
-          console.error("Login System Error:", error);
+        } catch (error: any) {
+          console.error("ERROR SISTEMA LOGIN:", error.message);
           return null
         }
       },
@@ -63,14 +74,14 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        token.role = user.role
+        token.role = (user as any).role
       }
       return token
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id as string
-        session.user.role = token.role as "ADMIN" | "EDITOR" | "AUTHOR"
+      if (token && session.user) {
+        (session.user as any).id = token.id
+          (session.user as any).role = token.role
       }
       return session
     },
