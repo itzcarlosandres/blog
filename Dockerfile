@@ -1,4 +1,4 @@
-# Dockerfile para Easypanel (Optimizado)
+# Dockerfile para Easypanel (Blindado total)
 FROM node:18-alpine AS base
 
 # 1. Instalar dependencias
@@ -12,25 +12,26 @@ RUN npm install
 FROM base AS builder
 WORKDIR /app
 
-# Recibir variables de Easypanel durante el BUILD
 ARG DATABASE_URL
 ARG NEXTAUTH_SECRET
 ARG NEXTAUTH_URL
 ARG UPLOAD_DIR
 ARG GIT_SHA
 
-# Pasar variables al proceso de build
 ENV DATABASE_URL=$DATABASE_URL
 ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 ENV NEXTAUTH_URL=$NEXTAUTH_URL
 ENV UPLOAD_DIR=$UPLOAD_DIR
 ENV GIT_SHA=$GIT_SHA
 ENV NEXT_TELEMETRY_DISABLED=1
-# SEÑAL PARA EL CÓDIGO: Estamos en fase de construcción
 ENV IS_BUILD_PHASE=true
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Aseguramos que la carpeta public existe para que no falle el COPY posterior
+RUN mkdir -p public
+
 RUN npm run build
 
 # 3. Imagen final de ejecución
@@ -43,9 +44,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Copiamos la carpeta public solo si tiene contenido, para evitar errores de Docker
 COPY --from=builder /app/public ./public
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+RUN mkdir -p .next && chown nextjs:nodejs .next
 
 # Usar el modo standalone de Next.js
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
