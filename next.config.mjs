@@ -18,7 +18,7 @@ const nextConfig = {
   },
   transpilePackages: ['lucide-react'],
   experimental: {
-    serverComponentsExternalPackages: ['isomorphic-dompurify'],
+    serverComponentsExternalPackages: ['isomorphic-dompurify', 'jsdom'],
   },
 }
 
